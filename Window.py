@@ -1,0 +1,21 @@
+from tkinter import *
+from ModelViewController import ModelViewController
+
+class Window:
+    def __init__(self):
+        self.mvc = ModelViewController()
+        root = Tk()
+        root.minsize(width=500, height=500)
+        self.displayLabel = Label(root, text="Enter a ticker: ")
+        self.searchBar = Entry(root)
+        self.searchButton = Button(root, text="Go")
+        self.balanceLabel = Label(root, text="Current balance: ")
+        self.balanceAmount = Label(root, text= self.mvc.getStartingBalance())
+
+        self.displayLabel.grid(row=0, column=0)
+        self.searchBar.grid(row=0, column=1)
+        self.searchButton.grid(row=0, column=2)
+        self.balanceLabel.grid(row=1, column=0)
+        self.balanceAmount.grid(row=1, column=1)
+
+        root.mainloop()

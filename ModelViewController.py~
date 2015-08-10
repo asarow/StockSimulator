@@ -1,0 +1,9 @@
+from BalanceUpdater import BalanceUpdater
+
+class ModelViewController:
+    def __init__(self):
+        self.updater = BalanceUpdater()
+        
+        
+    def getStartingBalance(self):
+        return self.updater.startingBalance
