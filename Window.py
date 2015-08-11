@@ -5,6 +5,7 @@ from Controller import Controller
 class Window:
     def __init__(self):
         self.controller = Controller()
+        self.controller.loadData()
         self.root = Tk()
         self.root.wm_title("Stock simulator v1.0")
         self.root.minsize(width=500, height=500)
@@ -123,4 +124,5 @@ class Window:
 
     def askQuit(self):
         if tmb.askokcancel("Quit", "Are you sure you want to exit?"):
+            self.controller.saveData()
             self.root.destroy()

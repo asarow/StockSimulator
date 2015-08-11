@@ -1,9 +1,8 @@
 
 class BalanceUpdater:
     def __init__(self):
-        self.startingBalance = 100000.00
         self.currentBalance = 100000.00
-        self.portfolio = {}
+        self.portfolio = {} 
 
     def buyStock(self, stockPrice, amount, ticker):
         calcPrice = stockPrice * amount
@@ -34,4 +33,11 @@ class BalanceUpdater:
 
     def getPortfolio(self):
         return self.portfolio
+
+    def loadPortfolio(self, portFromFile):
+        if "Balance" in portFromFile:
+            self.currentBalance = portFromFile.get("Balance")
+            del portFromFile["Balance"]
+
+        self.portfolio = portFromFile
         

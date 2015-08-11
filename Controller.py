@@ -1,5 +1,6 @@
 from BalanceUpdater import BalanceUpdater
 from DataGrabber import DataGrabber
+import pickle
 
 class Controller:
     def __init__(self):
@@ -33,3 +34,21 @@ class Controller:
             
     def getPortfolio(self):
         return self.updater.getPortfolio()
+        
+    def saveData(self):
+        self.updater.getPortfolio().update(
+            {"Balance":self.updater.currentBalance})
+
+        pickle.dump(self.updater.getPortfolio(),
+                    open("StockPortfolio.txt", "wb"))
+        
+    def loadData(self):
+        try:
+            portfolio = pickle.load(open("StockPortfolio.txt", "rb"))
+            if not portfolio:
+                return
+            else:
+                self.updater.loadPortfolio(portfolio)
+        except (OSError, IOError):
+            pass
+        
