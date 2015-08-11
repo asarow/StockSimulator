@@ -1,34 +1,33 @@
 from tkinter import *
-from ModelViewController import ModelViewController
+
+from Controller import Controller
 
 class Window:
     def __init__(self):
-        self.mvc = ModelViewController()
-        root = Tk()
-        root.wm_title("Stock simulator v1.0")
-        root.minsize(width=500, height=500)
+        self.controller = Controller()
+        self.root = Tk()
+        self.root.wm_title("Stock simulator v1.0")
+        self.root.minsize(width=500, height=500)
         self.stockPrice = IntVar()
         self.currentBal = IntVar()
         self.error = StringVar()
-        self.currentBal.set(self.mvc.getCurrentBalance())
-        self.portfolio = StringVar()
+        self.currentBal.set(self.controller.getCurrentBalance())
 
-        self.displayLabel = Label(root, text="Enter a ticker: ")
-        self.searchBar = Entry(root)
-        self.searchButton = Button(root, text="Go", command=lambda: 
+        self.displayLabel = Label(self.root, text="Enter a ticker: ")
+        self.searchBar = Entry(self.root)
+        self.searchButton = Button(self.root, text="Go", command=lambda: 
                                    self.checkData())
                    
-        self.buyButton = Button(root, text="Buy", state=DISABLED,
+        self.buyButton = Button(self.root, text="Buy", state=DISABLED,
                                 command=lambda: self.buyStock())
-        self.stockAmountBar = Entry(root)
-        self.balanceLabel = Label(root, text="Current balance: ")
-        self.balanceAmount = Label(root, textvariable=self.currentBal)
-        self.tickerDisplay = Label(root, text="Ticker price ")
-        self.tickerPrice = Label(root, textvariable=self.stockPrice)
-        self.errorLabel = Label(root, textvariable=self.error)
-        self.viewPortfolio = Button(root, text="View Portfilio", 
+        self.stockAmountBar = Entry(self.root)
+        self.balanceLabel = Label(self.root, text="Current balance: ")
+        self.balanceAmount = Label(self.root, textvariable=self.currentBal)
+        self.tickerDisplay = Label(self.root, text="Ticker price ")
+        self.tickerPrice = Label(self.root, textvariable=self.stockPrice)
+        self.errorLabel = Label(self.root, textvariable=self.error)
+        self.viewPortfolio = Button(self.root, text="View Portfilio", 
                                     command=lambda: self.getPortfolio())
-        self.viewPortfolioLabel = Label(root, textvariable=self.portfolio)
         self.displayLabel.grid(row=0, column=0)
         self.searchBar.grid(row=0, column=1)
         self.searchButton.grid(row=0, column=2)
@@ -40,8 +39,7 @@ class Window:
         self.buyButton.grid(row=2, column=3)
         self.errorLabel.grid(row=3, column=0)
         self.viewPortfolio.grid(row=4, column=3)
-        self.viewPortfolioLabel.grid(row=4, column=2)
-        root.mainloop()
+        self.root.mainloop()
 
     def checkData(self):
         if self.unlockButton() == True:
@@ -60,7 +58,7 @@ class Window:
             return True
 
     def pullData(self):
-        tickerPrice = self.mvc.grabLastTradePrice(self.searchBar.get())
+        tickerPrice = self.controller.grabLastTradePrice(self.searchBar.get())
         if tickerPrice == 0:
             self.buyButton['state'] = 'disabled'
             self.error.set("Invalid ticker!")
@@ -76,11 +74,11 @@ class Window:
         if not self.stockAmountBar.get():
             return
 
-        result = self.mvc.buyStock(self.stockPrice.get(), 
+        result = self.controller.buyStock(self.stockPrice.get(), 
                                    int(self.stockAmountBar.get()),
                                    self.searchBar.get())
         if result == True:
-            self.currentBal.set(self.mvc.getCurrentBalance())
+            self.currentBal.set(self.controller.getCurrentBalance())
             self.error.set("")
         else:
             self.error.set(result)
@@ -90,5 +88,17 @@ class Window:
         pass
 
     def getPortfolio(self):
-        port = self.mvc.getPortfolio()
-        self.portfolio.set(port)
+        self.portWindow = Toplevel()
+        self.portWindow.wm_title("Portfolio")
+        self.tickerBox = Listbox(self.portWindow)
+        self.valBox = Listbox(self.portWindow)
+        self.tickerBox.grid(row=0, column=0)
+        self.valBox.grid(row=0, column=1)
+        port = self.controller.getPortfolio()
+
+        for key in port:
+            print("%s %6.2f" % (key, port[key]))
+            self.tickerBox.insert(END, key)
+            self.valBox.insert(END, float(port[key]))
+
+
