@@ -8,8 +8,8 @@ class Window:
         self.root = Tk()
         self.root.wm_title("Stock simulator v1.0")
         self.root.minsize(width=500, height=500)
-        self.stockPrice = IntVar()
-        self.currentBal = IntVar()
+        self.stockPrice = DoubleVar()
+        self.currentBal = DoubleVar()
         self.error = StringVar()
         self.currentBal.set(self.controller.getCurrentBalance())
 
@@ -73,8 +73,8 @@ class Window:
             
         if not self.stockAmountBar.get():
             return
-
-        result = self.controller.buyStock(self.stockPrice.get(), 
+            
+        result = self.controller.buyStock(float(self.stockPrice.get()), 
                                    int(self.stockAmountBar.get()),
                                    self.searchBar.get())
         if result == True:
@@ -96,9 +96,8 @@ class Window:
         self.valBox.grid(row=0, column=1)
         port = self.controller.getPortfolio()
 
-        for key in port:
-            print("%s %6.2f" % (key, port[key]))
+        for key in sorted(port):
             self.tickerBox.insert(END, key)
-            self.valBox.insert(END, float(port[key]))
+            self.valBox.insert(END, port[key])
 
 
