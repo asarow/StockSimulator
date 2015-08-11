@@ -24,3 +24,4 @@ class DataGrabber:
                     return float(price)
         return 0.0
                 
+    

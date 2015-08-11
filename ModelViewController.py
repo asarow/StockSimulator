@@ -15,6 +15,10 @@ class ModelViewController:
     def grabLastTradePrice(self, ticker):
         return self.grabber.grabPrice(ticker)
 
-    def buyStock(self, stockPrice, amount):
-        self.updater.buyStock(stockPrice, amount)
+    def buyStock(self, stockPrice, amount, ticker):
+        canBuy = self.updater.buyStock(stockPrice, amount, ticker)
+        if canBuy == True:
+            return True
+        elif canBuy == False:
+            return "Could not buy stock."
         
