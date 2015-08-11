@@ -1,5 +1,6 @@
 from tkinter import *
 import tkinter.messagebox as tmb
+from decimal import Decimal
 from Controller import Controller
 
 class Window:
@@ -30,7 +31,7 @@ class Window:
         self.tickerDisplay = Label(self.root, anchor=E, text="Stock price:")
         self.tickerPrice = Label(self.root, textvariable=self.stockPrice)
         self.errorLabel = Label(self.root, textvariable=self.error)
-        self.viewPortfolio = Button(self.root, text="View Portfilio", 
+        self.viewPortfolio = Button(self.root, text="View Portfolio", 
                                     command=lambda: self.getPortfolio())
 
         self.displayLabel.grid(row=0, column=0, sticky=E)
@@ -120,7 +121,7 @@ class Window:
 
         for key in sorted(port):
             self.tickerBox.insert(END, key)
-            self.valBox.insert(END, port[key])
+            self.valBox.insert(END, Decimal(port[key]).quantize(Decimal('.01')))
 
     def askQuit(self):
         if tmb.askokcancel("Quit", "Are you sure you want to exit?"):
