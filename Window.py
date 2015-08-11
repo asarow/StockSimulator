@@ -53,8 +53,15 @@ class Window:
             return True
 
     def pullData(self):
-         self.stockPrice.set(self.mvc.grabLastTradePrice(self.searchBar.get()))
-    
+        tickerPrice = self.mvc.grabLastTradePrice(self.searchBar.get())
+        if tickerPrice == 0:
+            self.buyButton['state'] = 'disabled'
+            self.error.set("Invalid ticker!")
+        else:
+            self.stockPrice.set(tickerPrice)
+            self.error.set("");
+            self.buyButton['state'] = 'normal'
+         
     def buyStock(self):
         if self.unlockButton() == False:
             return
@@ -67,6 +74,9 @@ class Window:
             self.error.set("")
         else:
             self.error.set(result)
+            self.buyButton['state'] = 'disabled'
 
     def sellStock(self, int):
         pass
+
+    
