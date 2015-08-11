@@ -1,4 +1,5 @@
 import urllib
+from decimal import Decimal
 from urllib import request
 
 class DataGrabber:
@@ -21,7 +22,7 @@ class DataGrabber:
                 if len(data[firstIndex+20:secondIndex]) > 6:
                     return 0.0
                 else:
-                    return price
+                    return Decimal(price).quantize(Decimal('.01'))
         return 0.0
                 
     
