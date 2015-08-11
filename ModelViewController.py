@@ -22,3 +22,6 @@ class ModelViewController:
         elif canBuy == False:
             return "Could not buy stock."
         
+            
+    def getPortfolio(self):
+        return self.updater.getPortfolio()

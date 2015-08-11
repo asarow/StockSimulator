@@ -5,11 +5,13 @@ class Window:
     def __init__(self):
         self.mvc = ModelViewController()
         root = Tk()
+        root.wm_title("Stock simulator v1.0")
         root.minsize(width=500, height=500)
         self.stockPrice = IntVar()
         self.currentBal = IntVar()
         self.error = StringVar()
         self.currentBal.set(self.mvc.getCurrentBalance())
+        self.portfolio = StringVar()
 
         self.displayLabel = Label(root, text="Enter a ticker: ")
         self.searchBar = Entry(root)
@@ -24,6 +26,9 @@ class Window:
         self.tickerDisplay = Label(root, text="Ticker price ")
         self.tickerPrice = Label(root, textvariable=self.stockPrice)
         self.errorLabel = Label(root, textvariable=self.error)
+        self.viewPortfolio = Button(root, text="View Portfilio", 
+                                    command=lambda: self.getPortfolio())
+        self.viewPortfolioLabel = Label(root, textvariable=self.portfolio)
         self.displayLabel.grid(row=0, column=0)
         self.searchBar.grid(row=0, column=1)
         self.searchButton.grid(row=0, column=2)
@@ -34,6 +39,8 @@ class Window:
         self.stockAmountBar.grid(row=2, column=2)
         self.buyButton.grid(row=2, column=3)
         self.errorLabel.grid(row=3, column=0)
+        self.viewPortfolio.grid(row=4, column=3)
+        self.viewPortfolioLabel.grid(row=4, column=2)
         root.mainloop()
 
     def checkData(self):
@@ -65,6 +72,9 @@ class Window:
     def buyStock(self):
         if self.unlockButton() == False:
             return
+            
+        if not self.stockAmountBar.get():
+            return
 
         result = self.mvc.buyStock(self.stockPrice.get(), 
                                    int(self.stockAmountBar.get()),
@@ -79,4 +89,6 @@ class Window:
     def sellStock(self, int):
         pass
 
-    
+    def getPortfolio(self):
+        port = self.mvc.getPortfolio()
+        self.portfolio.set(port)
