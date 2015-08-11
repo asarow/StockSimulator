@@ -8,3 +8,13 @@ class ModelViewController:
         
     def getStartingBalance(self):
         return self.updater.startingBalance
+
+    def getCurrentBalance(self):
+        return self.updater.currentBalance
+
+    def grabLastTradePrice(self, ticker):
+        return self.grabber.grabPrice(ticker)
+
+    def buyStock(self, stockPrice, amount):
+        self.updater.buyStock(stockPrice, amount)
+        

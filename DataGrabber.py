@@ -17,5 +17,10 @@ class DataGrabber:
             if "<LastTradePriceOnly" in data:
                 firstIndex = data.find("<LastTradePriceOnly>")
                 secondIndex = data.find("</LastTradePriceOnly>")
-                print(data[firstIndex+20:secondIndex])
-                break
+                price = data[firstIndex+20:secondIndex]
+                if len(price) > 6:
+                    return 0.0
+                else:
+                    return float(price)
+        return 0.0
+                
