@@ -5,6 +5,7 @@ from Controller import Controller
 
 class Window:
     def __init__(self):
+        """Loads the Graphical User Interface. """
         self.controller = Controller()
         self.controller.loadData()
         self.root = Tk()
@@ -15,8 +16,8 @@ class Window:
         self.currentBal = DoubleVar()
         self.portVal = DoubleVar()
         self.error = StringVar()
-        self.currentBal.set(
-                   "{:.2f}".format(self.controller.getCurrentBalance()))
+        self.currentBal.set("{:.2f}".format(self.controller.
+                                            getCurrentBalance()))
         self.displayLabel = Label(self.root, text="Enter a ticker: ")
         self.searchBar = Entry(self.root)
         self.searchButton = Button(self.root, text="Go", command=lambda: 
@@ -53,25 +54,46 @@ class Window:
         self.portVal.set(self.controller.getPortfolioValue())
         self.root.mainloop()
         
-
+        
     def checkData(self):
+        """Checks certain conditions before pulling the stock price."""
         if self.unlockButton() == True:
             self.pullData()
             
     def unlockButton(self):
+        """Locks the buy and sell buttons until conditions are met.
+
+        If the stock ticker bar is empty, the buy and sell button are locked.
+  
+        Returns:
+            Returns True if data exists within the field regardless of validity,
+            False if the field is empty.
+        """
+
         ticker = self.searchBar.get()
         if not ticker:
             self.error.set("Enter a valid ticker.")
             self.buyButton['state'] = 'disabled'
+            self.sellButton['state'] = 'disabled'
             return False
         else:
             self.error.set("")
             self.buyButton['state'] = 'normal'
+            self.sellButton['state'] = 'normal'
             return True
 
     def pullData(self):
+        """Grabs the stock price and displays it on the GUI.
+
+        The controller object grabs the stock price from the DataGrabber 
+        class and the result is stored in tickerPrice. Since no public
+        company may have a stock price of 0.00, this indicates an error
+        occured and the buy/sell buttons are disabled. Else the stock price
+        is displayed in the GUI and the buy/sell buttons are unlocked.
+        """
+
         tickerPrice = self.controller.grabLastTradePrice(self.searchBar.get())
-        if tickerPrice == 0:
+        if tickerPrice == 0.00:
             self.buyButton['state'] = 'disabled'
             self.sellButton['state'] = 'disabled'
             self.error.set("Invalid ticker!")
