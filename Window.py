@@ -13,9 +13,10 @@ class Window:
         self.root.protocol("WM_DELETE_WINDOW", self.askQuit)
         self.stockPrice = DoubleVar()
         self.currentBal = DoubleVar()
+        self.portVal = DoubleVar()
         self.error = StringVar()
-        self.currentBal.set(self.controller.getCurrentBalance())
-
+        self.currentBal.set(
+                   "{:.2f}".format(self.controller.getCurrentBalance()))
         self.displayLabel = Label(self.root, text="Enter a ticker: ")
         self.searchBar = Entry(self.root)
         self.searchButton = Button(self.root, text="Go", command=lambda: 
@@ -33,7 +34,8 @@ class Window:
         self.errorLabel = Label(self.root, textvariable=self.error)
         self.viewPortfolio = Button(self.root, text="View Portfolio", 
                                     command=lambda: self.getPortfolio())
-
+        self.portfolioLabel = Label(self.root, text="Portfolio Value:")
+        self.portfolioValue = Label(self.root, textvariable=self.portVal)
         self.displayLabel.grid(row=0, column=0, sticky=E)
         self.searchBar.grid(row=0, column=1)
         self.searchButton.grid(row=0, column=2, sticky=W)
@@ -45,8 +47,12 @@ class Window:
         self.buyButton.grid(row=0, column=4)
         self.sellButton.grid(row=1, column=4, sticky=E)
         self.errorLabel.grid(row=1, columnspan=3, sticky=E)
-        self.viewPortfolio.grid(row=4, column=0)
+        self.portfolioLabel.grid(row=4, column=0)
+        self.portfolioValue.grid(row=4, column=1, sticky=W)
+        self.viewPortfolio.grid(row=4, column=2)
+        self.portVal.set(self.controller.getPortfolioValue())
         self.root.mainloop()
+        
 
     def checkData(self):
         if self.unlockButton() == True:
@@ -88,6 +94,7 @@ class Window:
         if result == True:
             self.currentBal.set(self.controller.getCurrentBalance())
             self.error.set("")
+            self.portVal.set(self.controller.getPortfolioValue())
         else:
             self.error.set(result)
             self.buyButton['state'] = 'disabled'
@@ -105,6 +112,7 @@ class Window:
         if result == True:
             self.currentBal.set(self.controller.getCurrentBalance())
             self.error.set("")
+            self.portVal.set(self.controller.getPortfolioValue())
         else:
             self.error.set(result)
             self.sellButton['state'] = 'disabled'
@@ -127,3 +135,5 @@ class Window:
         if tmb.askokcancel("Quit", "Are you sure you want to exit?"):
             self.controller.saveData()
             self.root.destroy()
+            
+    

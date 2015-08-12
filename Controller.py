@@ -40,15 +40,17 @@ class Controller:
             {"Balance":self.updater.currentBalance})
 
         pickle.dump(self.updater.getPortfolio(),
-                    open("StockPortfolio.txt", "wb"))
+                    open("PortfolioData.txt", "wb"))
         
     def loadData(self):
         try:
-            portfolio = pickle.load(open("StockPortfolio.txt", "rb"))
+            portfolio = pickle.load(open("PortfolioData.txt", "rb"))
             if not portfolio:
                 return
             else:
                 self.updater.loadPortfolio(portfolio)
         except (OSError, IOError):
             pass
-        
+            
+    def getPortfolioValue(self):
+        return self.updater.getPortfolioValue()

@@ -40,4 +40,11 @@ class BalanceUpdater:
             del portFromFile["Balance"]
 
         self.portfolio = portFromFile
+
+    def getPortfolioValue(self):
+        totalValue = 0
+        for key in self.portfolio:
+            totalValue += self.portfolio.get(key)
+
+        return "{:.2f}".format(totalValue)
         
