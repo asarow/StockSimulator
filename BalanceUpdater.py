@@ -8,10 +8,10 @@ class BalanceUpdater:
         calcPrice = stockPrice * amount
         if self.currentBalance >= calcPrice:
             if ticker in self.portfolio:
-                updatedPrice = self.portfolio.get(ticker) + calcPrice
-                self.portfolio.update({ticker:updatedPrice})
+                newAmount = self.portfolio.get(ticker) + amount
+                self.portfolio.update({ticker:newAmount})
             else:
-                self.portfolio.update({ticker:calcPrice})
+                self.portfolio.update({ticker:amount})
             self.currentBalance -= calcPrice
             return True
         else:
@@ -20,12 +20,14 @@ class BalanceUpdater:
     def sellStock(self, stockPrice, amount, ticker):
         calcPrice = stockPrice * amount
         if ticker in self.portfolio:
-            currentVal = self.portfolio.get(ticker)
-            if currentVal > calcPrice:
-                newPrice = currentVal - calcPrice
-                self.portfolio.update({ticker:newPrice})
-            elif currentVal <= calcPrice:
+            currentAmount = self.portfolio.get(ticker)
+            if currentAmount > amount:
+                newAmount = currentAmount - amount
+                self.portfolio.update({ticker:newAmount})
+            elif currentAmount == amount:
                 del self.portfolio[ticker]
+            else:
+                return False
             self.currentBalance += calcPrice
             return True
         else:
@@ -41,10 +43,4 @@ class BalanceUpdater:
 
         self.portfolio = portFromFile
 
-    def getPortfolioValue(self):
-        totalValue = 0
-        for key in self.portfolio:
-            totalValue += self.portfolio.get(key)
-
-        return "{:.2f}".format(totalValue)
         

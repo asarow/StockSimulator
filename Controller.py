@@ -6,6 +6,7 @@ class Controller:
     def __init__(self):
         self.updater = BalanceUpdater()
         self.grabber = DataGrabber()
+        self.portfolio = None
         
     def getStartingBalance(self):
         return self.updater.startingBalance
@@ -44,13 +45,17 @@ class Controller:
         
     def loadData(self):
         try:
-            portfolio = pickle.load(open("PortfolioData.txt", "rb"))
-            if not portfolio:
+            self.portfolio = pickle.load(open("PortfolioData.txt", "rb"))
+            if not self.portfolio:
                 return
             else:
-                self.updater.loadPortfolio(portfolio)
+                self.updater.loadPortfolio(self.portfolio)
         except (OSError, IOError):
             pass
-            
+
     def getPortfolioValue(self):
-        return self.updater.getPortfolioValue()
+        totalValue = 0
+        for key in self.portfolio:
+            totalValue += self.grabLastTradePrice(key)
+
+        return "{:.2f}".format(totalValue)

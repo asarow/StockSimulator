@@ -58,7 +58,6 @@ class Window:
         if self.unlockButton() == True:
             self.pullData()
             
-        
     def unlockButton(self):
         ticker = self.searchBar.get()
         if not ticker:
@@ -83,10 +82,7 @@ class Window:
             self.sellButton['state'] = 'normal'
 
     def buyStock(self):
-        if self.unlockButton() == False:
-            return
-            
-        if not self.stockAmountBar.get():
+        if self.unlockButton() == False or not self.stockAmountBar.get():
             return
             
         result = self.controller.buyStock(int(self.stockAmountBar.get()),
@@ -100,10 +96,7 @@ class Window:
             self.buyButton['state'] = 'disabled'
 
     def sellStock(self):
-        if self.unlockButton() == False:
-            return
-
-        if not self.stockAmountBar.get():
+        if self.unlockButton() == False or not self.stockAmountBar.get():
             return
 
         result = self.controller.sellStock(int(self.stockAmountBar.get()),
@@ -117,7 +110,6 @@ class Window:
             self.error.set(result)
             self.sellButton['state'] = 'disabled'
         
-
     def getPortfolio(self):
         self.portWindow = Toplevel()
         self.portWindow.wm_title("Portfolio")
@@ -129,7 +121,7 @@ class Window:
 
         for key in sorted(port):
             self.tickerBox.insert(END, key)
-            self.valBox.insert(END, Decimal(port[key]).quantize(Decimal('.01')))
+            self.valBox.insert(END, port[key])
 
     def askQuit(self):
         if tmb.askokcancel("Quit", "Are you sure you want to exit?"):
